@@ -43,10 +43,10 @@ def trade_report(prices, portfolio):
         value_change = holding['shares'] * float(prices[holding['name']]) - purchase_price
         report.append({
             'name':holding['name'],
-            'shares':holding['shares'],
-            'current price':prices[holding['name']],
-            'purchase price':holding['price'],
-            'value change':round(float(value_change), 2),
+            'shares':int(holding['shares']),
+            'current_price':float(prices[holding['name']]),
+            'purchase_price':float(holding['price']),
+            'value_change':float(value_change),
         })
     return(report)
 if len(sys.argv) == 2:
@@ -61,5 +61,10 @@ prices = prices()
 trade_report = trade_report(prices, total_portfolio)
 
 
-print('Portfolio holdings:', total_portfolio, '\nTotal cost was:', total_cost)
-print(trade_report)
+#print('Portfolio holdings:', total_portfolio, '\nTotal cost was:', total_cost)
+
+headers = ['Name', 'Shares', 'Price', 'Change']
+print('{:>10s} {:>10s} {:>10s} {:>10s}'.format('Name', 'Shares', 'Price', 'Change'))
+print('{:-^10} {:-^10} {:-^10} {:-^10}'.format('', '', '', ''))
+for holding in trade_report:
+    print('{name:>10s} {shares:>10d} {current_price:>10.2f} {value_change:>10.2f}'.format_map(holding))
