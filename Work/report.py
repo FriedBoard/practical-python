@@ -12,17 +12,18 @@ def read_portfolio(filename):
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
-        for row in rows:
-            holding = {
-                    'name':row[0],
-                    'shares':int(row[1]),
-                    'price':float(row[2])
-                }
-            portfolio.append(holding)
-
-    # Calculate total cost
-    for holding in portfolio:
-        cost += holding['shares'] * holding['price']
+        for rowno, row in enumerate(rows, start=1):
+            try:
+                '''holding = {
+                        'name':row[0],
+                        'shares':int(row[1]),
+                        'price':float(row[2])
+                    }
+                portfolio.append(holding)'''
+                record = dict(zip(headers, row))
+                cost += int(record['shares']) * float(record['price'])
+            except ValueError:
+                print(f'Row {rowno}: Bad row: {row}')
     return(portfolio, cost)
 
 def prices():
@@ -48,6 +49,7 @@ def trade_report(prices, portfolio):
             'purchase_price':float(holding['price']),
             'value_change':float(value_change),
         })
+
     return(report)
 if len(sys.argv) == 2:
     filename = sys.argv[1]
@@ -58,13 +60,15 @@ else:
 
 total_portfolio, total_cost = read_portfolio(filename)
 prices = prices()
-trade_report = trade_report(prices, total_portfolio)
+#trade_report = trade_report(prices, total_portfolio)
 
 
-#print('Portfolio holdings:', total_portfolio, '\nTotal cost was:', total_cost)
-
+print('Portfolio holdings:', total_portfolio, '\nTotal cost was:', total_cost)
+'''
 headers = ['Name', 'Shares', 'Price', 'Change']
 print('{:>10s} {:>10s} {:>10s} {:>10s}'.format('Name', 'Shares', 'Price', 'Change'))
 print('{:-^10} {:-^10} {:-^10} {:-^10}'.format('', '', '', ''))
 for holding in trade_report:
     print('{name:>10s} {shares:>10d} {current_price:>10.2f} {value_change:>10.2f}'.format_map(holding))
+
+''' 
