@@ -14,12 +14,12 @@ def read_portfolio(filename):
         headers = next(rows)
         for rowno, row in enumerate(rows, start=1):
             try:
-                '''holding = {
+                holding = {
                         'name':row[0],
                         'shares':int(row[1]),
                         'price':float(row[2])
                     }
-                portfolio.append(holding)'''
+                portfolio.append(holding)
                 record = dict(zip(headers, row))
                 cost += int(record['shares']) * float(record['price'])
             except ValueError:
@@ -72,3 +72,38 @@ for holding in trade_report:
     print('{name:>10s} {shares:>10d} {current_price:>10.2f} {value_change:>10.2f}'.format_map(holding))
 
 ''' 
+
+# 2.5
+portfolio = read_portfolio('Data/portfolio.csv')[0]
+portfolio2 = read_portfolio('Data/portfolio2.csv')[0]
+from collections import Counter
+holdings = Counter()
+for s in portfolio:
+    holdings[s['name']] += s['shares']
+
+holdings2 = Counter()
+for s in portfolio2:
+    holdings2[s['name']] += s['shares']
+
+combined = holdings + holdings2
+
+print(combined)
+
+# 2.20
+portfolio = read_portfolio('Data/portfolio.csv')[0]
+cost = sum([s['shares'] * s['price'] for s in portfolio])
+print(cost)
+
+more100 = [ s for s in portfolio if s['shares'] > 100]
+print(more100)
+
+name_shares = [ (s['name'], s['shares']) for s in portfolio]
+print(name_shares)
+
+f = open('Data/portfoliodate.csv')
+rows = csv.reader(f)
+headers = next(rows)
+select = ['name', 'shares', 'name']
+indices = [headers.index(colname) for colname in select]
+portfolio = [{colname:row[index] for colname, index in zip(select, indices)} for row in rows]
+print(portfolio)
