@@ -3,6 +3,7 @@
 # Exercise 2.4
 import csv
 import sys
+import fileparse
 
 def print_report(filename, pricelist):
     '''
@@ -15,23 +16,16 @@ def print_report(filename, pricelist):
     for row in portfolio:
         print('{name:>10s} {shares:>10d} {current_price:>10.2f} {value_change:>10.2f}'.format_map(row))   
 
-def read_portfolio(filename, pricelist):
+def read_portfolio(filename, pricelist=None):
     '''Returns the content of the portfolio file location as dict'''
     portfolio = []
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for rowno, row in enumerate(rows, start=1):
-            try:
-                 trade = dict(zip(headers, row))
-                 trade['name'] = str(trade['name'])
-                 trade['shares'] = int(trade['shares'])
-                 trade['price'] = round(float(trade['price']), 2)
-                 trade = total_cost(trade)
-                 portfolio += [trade]
-              
-            except ValueError:
-                print(f'Row {rowno}: Bad row: {row}')
+    
+    f = fileparse.parse_csv(filename)
+    for trade in f:
+        trade = total_cost(trade)
+        portfolio += [trade]
+
+    if pricelist:
         portfolio = total_value(portfolio, pricelist)
         portfolio = value_change(portfolio, pricelist)
     return(portfolio)
@@ -63,10 +57,10 @@ def value_change(portfolio, pricelist):
     return(portfolio)
 
 def prices(pricelist):
-    f = open(pricelist, 'r')
+    #f = open(pricelist, 'r')
+    price_list_rows = fileparse.parse_csv(filename=pricelist, has_headers=False, types=[str,float], select=None)
     price_list = {}
-    rows = csv.reader(f)
-    for row in rows:
+    for row in price_list_rows:
         try:
             price_list[row[0]] = round(float(row[1]),2)
         except:
@@ -80,4 +74,3 @@ else:
     filename = 'Data/portfolio.csv'
     pricelist = 'Data/prices.csv'
 
-print_report(filename, pricelist)
