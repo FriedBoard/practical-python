@@ -58,8 +58,7 @@ def value_change(portfolio, pricelist):
     return(portfolio)
 
 def prices(pricelist):
-    #f = open(pricelist, 'r')
-    price_list_rows = fileparse.parse_csv(filename=pricelist, has_headers=False, types=[str,float], select=None)
+    price_list_rows = fileparse.parse_csv(lines=pricelist, has_headers=False, types=[str,float], select=None)
     price_list = {}
     for row in price_list_rows:
         try:
@@ -86,7 +85,20 @@ def main(argv):
         portfolio_file = 'Data/portfolio.csv'
         price_list = 'Data/prices.csv'
 
-    print_report(portfolio_file, price_list) 
+    portfolio_lines = []
+    price_lines = []
+
+    with open(portfolio_file, 'r') as f:
+        for line in f:
+            line = line.rstrip()
+            portfolio_lines.append(line)
+
+    with open(price_list, 'r') as f:
+        for line in f:
+            line = line.rstrip()
+            price_lines.append(line)
+
+    print_report(portfolio_lines, price_lines) 
 
 if __name__ == '__main__':
     main(sys.argv)

@@ -18,7 +18,14 @@ def main(argv):
     else:
         filename = 'Data/portfolio.csv'
     
-    print(portfolio_Cost(filename))
+    portfolio_lines = []
+
+    with open(filename, 'r') as f:
+        for line in f:
+            line = line.rstrip()
+            portfolio_lines.append(line)
+
+    print(portfolio_Cost(portfolio_lines))
 
 if __name__ == '__main__':
     import sys
