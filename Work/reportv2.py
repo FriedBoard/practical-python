@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # report.py
 #
 # Exercise 2.4
@@ -67,10 +68,25 @@ def prices(pricelist):
             continue
     return(price_list)
 
-if len(sys.argv) == 2:
-    filename = sys.argv[1]
-    pricelist = sys.argv[2]
-else:
-    filename = 'Data/portfolio.csv'
-    pricelist = 'Data/prices.csv'
+def main(argv):
+    if len(argv) == 2:
+        try:
+            portfolio_file = argv[0]
+        except:
+            print('No portfolio file given')
+            
 
+        try:
+            price_list = argv[1]
+        except:
+            print('No pricelist given')
+            
+
+    else:
+        portfolio_file = 'Data/portfolio.csv'
+        price_list = 'Data/prices.csv'
+
+    print_report(portfolio_file, price_list) 
+
+if __name__ == '__main__':
+    main(sys.argv)
